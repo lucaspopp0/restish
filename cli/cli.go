@@ -528,6 +528,20 @@ Not after (expires): %s (%s)
 	}
 	Root.AddCommand(linkCmd)
 
+	completionCmd := &cobra.Command{
+		GroupID:               "generic",
+		Short:                 "Generate completion script",
+		Long:                  completionCmdLong,
+		Use:                   completionCmdUsage(),
+		DisableFlagsInUseLine: true,
+		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
+		Args:                  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
+		Run: func(cmd *cobra.Command, args []string) {
+			completion(args[0], Root)
+		},
+	}
+	Root.AddCommand(completionCmd)
+
 	GlobalFlags = pflag.NewFlagSet("eager-flags", pflag.ContinueOnError)
 	GlobalFlags.ParseErrorsWhitelist.UnknownFlags = true
 	// GlobalFlags are 'hidden', don't print anything on error
